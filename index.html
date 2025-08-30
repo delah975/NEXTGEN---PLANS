@@ -3,135 +3,781 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXTGEN Plans</title>
+  <title>NEXTGEN Student Planner</title>
+  <!-- Google Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --background: #f8fafc;
+      --background-dark: #1e293b;
+      --section-bg: #fff;
+      --section-bg-dark: #334155;
+      --card-bg: #e0f2fe;
+      --card-bg-dark: #1e293b;
+      --accent: #38bdf8;
+      --danger: #ef4444;
+      --danger-dark: #dc2626;
+      --success: #22c55e;
+      --font-main: 'Roboto', Arial, sans-serif;
+      --font-head: 'Montserrat', Arial, sans-serif;
+    }
+    [data-theme="dark"] {
+      --background: #0f172a;
+      --section-bg: #1e293b;
+      --card-bg: #334155;
+      color-scheme: dark;
+    }
+
+    html, body {
+      font-family: var(--font-main);
       margin: 0;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
+      background: var(--background);
+      color: #222;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    body[data-theme="dark"] {
+      color: #e0eafc;
     }
     header {
-      background: #0ea5e9;
-      padding: 20px;
+      background: var(--primary);
+      color: #fff;
+      padding: 30px 0 18px 0;
       text-align: center;
-      font-size: 28px;
-      font-weight: bold;
+      font-size: 33px;
+      font-family: var(--font-head);
+      font-weight: 700;
       letter-spacing: 2px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .content {
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--section-bg);
+      box-shadow: 0 1px 10px rgba(0,0,0,0.06);
+      padding: 14px 28px;
+      font-size: 17px;
+      font-family: var(--font-main);
     }
-    .section {
-      background: #1e293b;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-    }
-    .section-header {
-      padding: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #0ea5e9;
-      border: none;
-      width: 100%;
-      text-align: left;
-      color: white;
-      outline: none;
+    .profile {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      transition: background 0.3s;
+      gap: 14px;
     }
-    .section-header:hover {
-      background: #0284c7;
+    .profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 100px;
+      object-fit: cover;
+      border: 2.5px solid var(--primary);
+      background: #fff;
     }
-    .arrow {
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      font-size: 15px;
+      color: #222;
+    }
+    [data-theme="dark"] .profile-info {
+      color: #e0eafc;
+    }
+    .profile-info .name {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .mode-toggle {
+      background: var(--card-bg);
+      color: var(--primary-dark);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-family: var(--font-head);
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mode-toggle:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .main-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 16px;
+      align-items: flex-start;
+      min-height: 60vh;
+    }
+    .sidebar {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 28px 22px;
+      min-width: 240px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      height: fit-content;
+      font-size: 16px;
+      font-family: var(--font-main);
+    }
+    [data-theme="dark"] .sidebar {
+      background: var(--card-bg-dark);
+    }
+    .sidebar h2 {
+      font-size: 19px;
+      margin-bottom: 13px;
+      color: var(--accent);
+      font-family: var(--font-head);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .sidebar ul {
+      padding-left: 16px;
+      margin: 0 0 10px 0;
+    }
+    .sidebar li {
+      margin-bottom: 8px;
+      line-height: 1.7;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .sidebar .progress-bar {
+      margin: 19px 0 7px 0;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .sidebar .progress {
+      height: 100%;
+      background: var(--success);
+      width: 60%;
+      border-radius: 5px;
+      transition: width 0.5s;
+    }
+    .sidebar .semester {
+      font-size: 13px;
+      color: var(--accent);
+      opacity: .8;
+      margin-top: 13px;
+    }
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      min-width: 310px;
+    }
+    .card {
+      background: var(--section-bg);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+      padding: 30px 24px;
+      transition: transform 0.16s, box-shadow 0.16s, background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    [data-theme="dark"] .card {
+      background: var(--section-bg-dark);
+    }
+    .card:hover {
+      transform: translateY(-2px) scale(1.014);
+      box-shadow: 0 4px 32px rgba(14,165,233,0.09);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-family: var(--font-head);
+      font-weight: 700;
+      color: var(--accent);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+      outline: none;
+    }
+    .section-header .icon {
+      margin-right: 12px;
+      font-size: 26px;
+      opacity: 0.85;
+    }
+    .section-header .arrow {
+      margin-left: auto;
+      font-size: 20px;
       transition: transform 0.3s ease;
+      color: #fff;
     }
     .rotate {
       transform: rotate(90deg);
     }
     .section-content {
       display: none;
-      padding: 15px;
-      animation: fadeIn 0.3s;
+      animation: fadeIn 0.4s;
+      margin-top: 13px;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(-10px);}
+      to { opacity: 1; transform: translateY(0);}
     }
-    .section-content textarea {
-      width: 100%;
-      height: 150px;
+    .course-notes-list {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       margin-top: 10px;
-      padding: 10px;
-      border-radius: 8px;
+    }
+    .course-card {
+      background: var(--card-bg);
+      border-radius: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 16px 13px;
+      transition: box-shadow 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    [data-theme="dark"] .course-card {
+      background: var(--card-bg-dark);
+      color: #e0eafc;
+    }
+    .course-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: var(--primary-dark);
+      font-family: var(--font-head);
+      letter-spacing: .5px;
+    }
+    [data-theme="dark"] .course-title {
+      color: var(--accent);
+    }
+    .course-textarea {
+      width: 100%;
+      height: 70px;
+      margin-top: 7px;
+      padding: 7px;
+      border-radius: 7px;
       border: none;
       outline: none;
       font-size: 15px;
+      background: var(--section-bg);
+      color: #222;
       resize: vertical;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      font-family: var(--font-main);
+      transition: background 0.2s;
     }
-    .clear-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: 0.3s;
+    [data-theme="dark"] .course-textarea {
+      background: var(--section-bg-dark);
+      color: #e0eafc;
+    }
+    .todo-section {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .todo-label {
+      font-weight: 500;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
       display: block;
     }
+    [data-theme="dark"] .todo-label {
+      color: var(--accent);
+    }
+    .todo-list {
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+      max-height: 120px;
+      overflow-y: auto;
+      margin-bottom: 8px;
+    }
+    .todo-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 7px;
+      gap: 6px;
+    }
+    .todo-list input[type="checkbox"] {
+      accent-color: var(--success);
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+    .todo-list .todo-delete {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 16px;
+      margin-left: 8px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .todo-list .todo-delete:hover {
+      opacity: 1;
+    }
+    .todo-add {
+      display: flex;
+      gap: 7px;
+      margin-top: 5px;
+    }
+    .todo-add input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .todo-add button {
+      background: var(--primary-dark);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 13px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: var(--font-main);
+      transition: background 0.2s;
+    }
+    .todo-add button:hover {
+      background: var(--primary);
+    }
+    .calendar-section {
+      margin-top: 10px;
+    }
+    .calendar-list {
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .calendar-list li {
+      background: var(--card-bg);
+      border-radius: 8px;
+      margin-bottom: 7px;
+      padding: 7px 12px;
+      font-size: 15px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #222;
+      font-family: var(--font-main);
+    }
+    [data-theme="dark"] .calendar-list li {
+      background: var(--card-bg-dark);
+      color: #e0eafc;
+    }
+    .calendar-delete {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0.7;
+      margin-left: 12px;
+      transition: opacity 0.2s;
+    }
+    .calendar-delete:hover {
+      opacity: 1;
+    }
+    .calendar-add {
+      display: flex;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .calendar-add input[type="text"] {
+      flex: 2;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .calendar-add input[type="date"] {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .calendar-add button {
+      background: var(--primary-dark);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 13px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: var(--font-main);
+      transition: background 0.2s;
+    }
+    .calendar-add button:hover {
+      background: var(--primary);
+    }
+    .search-bar {
+      width: 100%;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .search-bar input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 13px;
+      font-size: 15px;
+      outline: none;
+      font-family: var(--font-main);
+    }
+    .search-bar button {
+      background: var(--primary-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: var(--font-main);
+      transition: background 0.2s;
+    }
+    .search-bar button:hover {
+      background: var(--primary);
+    }
+    .clear-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 16px 28px;
+      font-size: 18px;
+      font-family: var(--font-head);
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 22px;
+      transition: background 0.3s, transform 0.2s;
+      display: block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.11);
+      align-self: flex-end;
+    }
     .clear-btn:hover {
-      background: #dc2626;
+      background: var(--danger-dark);
+      transform: scale(1.04);
+    }
+    .export-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-family: var(--font-head);
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 9px;
+      margin-right: 11px;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    }
+    .export-btn:hover {
+      background: #16a34a;
+      transform: scale(1.04);
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .sidebar {
+        min-width: 0;
+        margin-bottom: 16px;
+      }
+      .content {
+        min-width: 0;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 19px;
+        padding: 11px;
+      }
+      .main-container {
+        margin: 15px auto;
+        padding: 0 3px;
+      }
+      .card {
+        padding: 10px 4px;
+      }
+      .section-header {
+        font-size: 15px;
+      }
+      .sidebar h2 {
+        font-size: 13px;
+      }
+      .sidebar {
+        padding: 10px 7px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    NEXTGEN Plans
+    NEXTGEN Student Planner
   </header>
-  <div class="content">
-    <div class="section">
-      <button class="section-header">Notes <span class="arrow">▶</span></button>
-      <div class="section-content">
-        <textarea id="notesArea" placeholder="Type your notes..."></textarea>
+  <div class="top-bar">
+    <div class="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" id="avatar">
+      <div class="profile-info">
+        <span class="name" id="studentName">Student Name</span>
+        <span id="programSemester">BSc in IT, Semester 2</span>
       </div>
     </div>
-    <div class="section">
-      <button class="section-header">Workout Routine <span class="arrow">▶</span></button>
-      <div class="section-content">
-        <textarea id="workoutArea" placeholder="Log your workouts..."></textarea>
-      </div>
-    </div>
-    <div class="section">
-      <button class="section-header">Money Plans <span class="arrow">▶</span></button>
-      <div class="section-content">
-        <textarea id="moneyArea" placeholder="Write your money plans..."></textarea>
-      </div>
-    </div>
-    <div class="section">
-      <button class="section-header">Future Strategy <span class="arrow">▶</span></button>
-      <div class="section-content">
-        <textarea id="futureArea" placeholder="Write your strategies..."></textarea>
-      </div>
-    </div>
-    <button class="clear-btn" onclick="clearAll()">Clear All Plans</button>
+    <button class="mode-toggle" id="toggleTheme">
+      <span id="themeIcon">🌙</span> Dark Mode
+    </button>
   </div>
-
+  <div class="main-container">
+    <aside class="sidebar">
+      <h2>Course Units</h2>
+      <ul id="courseList">
+        <li>BAF 1101 - Financial Accounting I</li>
+        <li>BIT 4204 - E-Commerce</li>
+        <li>BIT 1202 - Introduction to Web Design</li>
+        <li>BIT 1101 - Computer Architecture</li>
+        <li>BBM 1201 - Principles and Practice Management</li>
+        <li>BIT 2202 - Business Info System Analysis and Design</li>
+      </ul>
+      <div class="progress-bar">
+        <div class="progress" id="overallProgress"></div>
+      </div>
+      <div class="semester">
+        Track your semester progress
+      </div>
+    </aside>
+    <main class="content">
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search notes, tasks, courses...">
+          <button onclick="searchContent()">🔍 Search</button>
+        </div>
+        <button class="section-header"><span class="icon">📝</span>Per-Course Notes <span class="arrow">▶</span></button>
+        <div class="section-content" id="notesSection">
+          <div class="course-notes-list" id="courseNotesList">
+            <!-- Per-course notes cards will be injected here -->
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <button class="section-header"><span class="icon">✅</span>Course To-Do Lists <span class="arrow">▶</span></button>
+        <div class="section-content" id="todoSection">
+          <div class="course-notes-list" id="courseTodoList">
+            <!-- Per-course todo cards will be injected here -->
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <button class="section-header"><span class="icon">📅</span>Upcoming Deadlines/Calendar <span class="arrow">▶</span></button>
+        <div class="section-content" id="calendarSection">
+          <ul class="calendar-list" id="calendarList"></ul>
+          <div class="calendar-add">
+            <input type="text" id="calendarTitle" placeholder="Event/Deadline title">
+            <input type="date" id="calendarDate">
+            <button onclick="addCalendarEvent()">Add</button>
+          </div>
+        </div>
+      </div>
+      <button class="export-btn" onclick="exportData()">Export Planner Data</button>
+      <button class="clear-btn" onclick="clearAll()">Clear All Data</button>
+    </main>
+  </div>
   <script>
-    // Collapsible sections with rotating arrow
-    const headers = document.querySelectorAll(".section-header");
-    headers.forEach(header => {
+    // Profile setup
+    document.getElementById('studentName').textContent = 'Delah975'; // Change as needed
+    document.getElementById('programSemester').textContent = 'BSc in IT, Semester 2';
+
+    // Theme Toggle
+    const themeBtn = document.getElementById('toggleTheme');
+    const themeIcon = document.getElementById('themeIcon');
+    function setTheme(mode) {
+      document.body.setAttribute('data-theme', mode);
+      themeIcon.textContent = mode === 'dark' ? '☀️' : '🌙';
+      themeBtn.textContent = mode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      localStorage.setItem('theme', mode);
+    }
+    themeBtn.onclick = function() {
+      const current = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(current);
+    };
+    // Load theme on start
+    setTheme(localStorage.getItem('theme') || 'light');
+
+    // Course Units
+    const courses = [
+      { code: "BAF 1101", name: "Financial Accounting I" },
+      { code: "BIT 4204", name: "E-Commerce" },
+      { code: "BIT 1202", name: "Introduction to Web Design" },
+      { code: "BIT 1101", name: "Computer Architecture" },
+      { code: "BBM 1201", name: "Principles and Practice Management" },
+      { code: "BIT 2202", name: "Business Info System Analysis and Design" }
+    ];
+
+    // Per-Course Notes
+    function renderCourseNotes() {
+      const container = document.getElementById('courseNotesList');
+      container.innerHTML = '';
+      courses.forEach(course => {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.innerHTML = `
+          <div class="course-title">${course.code} - ${course.name}</div>
+          <textarea class="course-textarea" id="notes_${course.code.replace(/\s/g, '')}" placeholder="Type notes for ${course.code}..."></textarea>
+        `;
+        container.appendChild(card);
+        // Load notes
+        document.getElementById(`notes_${course.code.replace(/\s/g, '')}`).value =
+          localStorage.getItem(`notes_${course.code}`) || '';
+        // Save notes on input
+        document.getElementById(`notes_${course.code.replace(/\s/g, '')}`).addEventListener('input', function() {
+          localStorage.setItem(`notes_${course.code}`, this.value);
+        });
+      });
+    }
+    renderCourseNotes();
+
+    // Per-Course ToDo
+    function renderCourseTodos() {
+      const container = document.getElementById('courseTodoList');
+      container.innerHTML = '';
+      courses.forEach(course => {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.innerHTML = `
+          <div class="course-title">${course.code} - ${course.name}</div>
+          <div class="todo-section">
+            <span class="todo-label">To-Do:</span>
+            <ul class="todo-list" id="todoList_${course.code.replace(/\s/g, '')}"></ul>
+            <div class="todo-add">
+              <input type="text" id="todoInput_${course.code.replace(/\s/g, '')}" placeholder="New task...">
+              <button onclick="addTodo('${course.code}')">Add</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+        renderTodos(course.code);
+      });
+    }
+    function getTodos(code) {
+      return JSON.parse(localStorage.getItem(`todo_${code}`) || '[]');
+    }
+    function renderTodos(code) {
+      const list = document.getElementById(`todoList_${code.replace(/\s/g, '')}`);
+      if (!list) return;
+      list.innerHTML = '';
+      getTodos(code).forEach((todo, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <input type="checkbox" ${todo.done ? 'checked' : ''} onclick="toggleTodo('${code}',${idx})">
+          <span style="${todo.done ? 'text-decoration:line-through; color:gray;' : ''}">${todo.text}</span>
+          <button class="todo-delete" onclick="deleteTodo('${code}',${idx})" title="Delete">✖</button>
+        `;
+        list.appendChild(li);
+      });
+      updateProgress();
+    }
+    function addTodo(code) {
+      const input = document.getElementById(`todoInput_${code.replace(/\s/g, '')}`);
+      const value = input.value.trim();
+      if (!value) return;
+      const todos = getTodos(code);
+      todos.push({ text: value, done: false });
+      localStorage.setItem(`todo_${code}`, JSON.stringify(todos));
+      input.value = '';
+      renderTodos(code);
+    }
+    function toggleTodo(code, idx) {
+      const todos = getTodos(code);
+      todos[idx].done = !todos[idx].done;
+      localStorage.setItem(`todo_${code}`, JSON.stringify(todos));
+      renderTodos(code);
+    }
+    function deleteTodo(code, idx) {
+      const todos = getTodos(code);
+      todos.splice(idx, 1);
+      localStorage.setItem(`todo_${code}`, JSON.stringify(todos));
+      renderTodos(code);
+    }
+    renderCourseTodos();
+
+    // Progress Bar
+    function updateProgress() {
+      let total = 0, done = 0;
+      courses.forEach(course => {
+        const todos = getTodos(course.code);
+        total += todos.length;
+        done += todos.filter(t => t.done).length;
+      });
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('overallProgress').style.width = percent + '%';
+    }
+    updateProgress();
+
+    // Calendar/Deadlines
+    function getCalendarEvents() {
+      return JSON.parse(localStorage.getItem('calendar_events') || '[]');
+    }
+    function renderCalendarList() {
+      const list = document.getElementById('calendarList');
+      list.innerHTML = '';
+      getCalendarEvents().forEach((ev, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${ev.title} <span style="color:var(--accent);">(${ev.date})</span></span>
+          <button class="calendar-delete" onclick="deleteCalendarEvent(${idx})" title="Delete">✖</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+    function addCalendarEvent() {
+      const title = document.getElementById('calendarTitle').value.trim();
+      const date = document.getElementById('calendarDate').value;
+      if (!title || !date) return;
+      const events = getCalendarEvents();
+      events.push({ title, date });
+      localStorage.setItem('calendar_events', JSON.stringify(events));
+      document.getElementById('calendarTitle').value = '';
+      document.getElementById('calendarDate').value = '';
+      renderCalendarList();
+      sendNotification(`New event added: ${title} (${date})`);
+    }
+    function deleteCalendarEvent(idx) {
+      const events = getCalendarEvents();
+      events.splice(idx, 1);
+      localStorage.setItem('calendar_events', JSON.stringify(events));
+      renderCalendarList();
+    }
+    renderCalendarList();
+
+    // Collapsible sections
+    document.querySelectorAll(".section-header").forEach(header => {
       header.addEventListener("click", () => {
-        const content = header.nextElementSibling;
+        const content = header.parentElement.querySelector(".section-content");
         const arrow = header.querySelector(".arrow");
         if (content.style.display === "block") {
           content.style.display = "none";
@@ -143,27 +789,91 @@
       });
     });
 
-    // Auto-save each textarea
-    const textareas = document.querySelectorAll("textarea");
-    textareas.forEach(area => {
-      const key = area.id;
-      // Load saved content
-      area.value = localStorage.getItem(key) || "";
-      // Save on input
-      area.addEventListener("input", () => {
-        localStorage.setItem(key, area.value);
+    // Search/filter
+    function searchContent() {
+      const term = document.getElementById('searchInput').value.trim().toLowerCase();
+      // Filter notes
+      courses.forEach(course => {
+        const notesArea = document.getElementById(`notes_${course.code.replace(/\s/g, '')}`);
+        if (!notesArea) return;
+        if (notesArea.value.toLowerCase().includes(term) || course.code.toLowerCase().includes(term) || course.name.toLowerCase().includes(term)) {
+          notesArea.parentElement.style.display = '';
+        } else {
+          notesArea.parentElement.style.display = term ? 'none' : '';
+        }
       });
-    });
+      // Filter todos
+      courses.forEach(course => {
+        const todoList = document.getElementById(`todoList_${course.code.replace(/\s/g, '')}`);
+        if (!todoList) return;
+        let hasMatch = false;
+        getTodos(course.code).forEach(todo => {
+          if (todo.text.toLowerCase().includes(term)) hasMatch = true;
+        });
+        todoList.parentElement.parentElement.style.display = hasMatch || !term ? '' : 'none';
+      });
+      // Filter calendar
+      const calendarItems = document.querySelectorAll('#calendarList li');
+      calendarItems.forEach(item => {
+        if (item.textContent.toLowerCase().includes(term)) {
+          item.style.display = '';
+        } else {
+          item.style.display = term ? 'none' : '';
+        }
+      });
+    }
+
+    // Export/Import
+    function exportData() {
+      const data = {
+        notes: {},
+        todos: {},
+        calendar: getCalendarEvents()
+      };
+      courses.forEach(course => {
+        data.notes[course.code] = localStorage.getItem(`notes_${course.code}`) || '';
+        data.todos[course.code] = getTodos(course.code);
+      });
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `NEXTGEN_Planner_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
 
     // Clear All Button
     function clearAll() {
-      if (confirm("Are you sure you want to clear everything?")) {
-        textareas.forEach(area => {
-          area.value = "";
-          localStorage.removeItem(area.id);
+      if (confirm("Are you sure you want to clear all planner data? This cannot be undone.")) {
+        // Remove all notes, todos, calendar
+        courses.forEach(course => {
+          localStorage.removeItem(`notes_${course.code}`);
+          localStorage.removeItem(`todo_${course.code}`);
         });
+        localStorage.removeItem('calendar_events');
+        renderCourseNotes();
+        renderCourseTodos();
+        renderCalendarList();
+        updateProgress();
       }
     }
+
+    // Notifications
+    function sendNotification(msg) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("NEXTGEN Planner", { body: msg });
+      }
+    }
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    // Update progress bar on todo changes
+    window.addEventListener('storage', updateProgress);
+
   </script>
 </body>
 </html>
