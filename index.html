@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <style>
+    /* ... all your styles retained ... */
     :root {
       --primary: #0ea5e9;
       --primary-dark: #0284c7;
@@ -23,16 +24,15 @@
       --success: #22c55e;
       --font-main: 'Roboto', Arial, sans-serif;
       --font-head: 'Montserrat', Arial, sans-serif;
-      --bg-image: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80'); /* Free Unsplash image: students on campus */
+      --bg-image: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80');
     }
     [data-theme="dark"] {
       --background: #0f172a;
       --section-bg: #1e293b;
       --card-bg: #334155;
       color-scheme: dark;
-      --bg-image: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80'); /* Free Unsplash: night study */
+      --bg-image: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80');
     }
-
     html, body {
       font-family: var(--font-main);
       margin: 0;
@@ -40,7 +40,6 @@
       background: var(--background);
       color: #222;
       transition: background 0.3s, color 0.3s;
-      /* Background image styling */
       background-image: var(--bg-image);
       background-size: cover;
       background-position: center;
@@ -64,7 +63,6 @@
     body[data-theme="dark"] {
       color: #e0eafc;
     }
-
     header {
       background: var(--primary);
       color: #fff;
@@ -309,8 +307,6 @@
       background: var(--section-bg-dark);
       color: #e0eafc;
     }
-
-    /* Personal Planner: list stylings */
     .personal-list {
       gap: 18px;
       grid-template-columns: 1fr;
@@ -387,8 +383,6 @@
     .personal-add button:hover {
       background: var(--primary);
     }
-
-    /* Responsive */
     @media (max-width: 900px) {
       .main-container {
         flex-direction: column;
@@ -442,7 +436,7 @@
       <span id="themeIcon">🌙</span> Dark Mode
     </button>
   </div>
-  <div class="main-container">
+  <div class="main-container" id="dashboardView">
     <aside class="sidebar">
       <h2>Course Units</h2>
       <ul id="courseList">
@@ -488,14 +482,10 @@
           </div>
         </div>
       </div>
-
-      <!-- NEW: Personal Planner Card -->
       <div class="card">
         <button class="section-header"><span class="icon">🌟</span>Personal Planner <span class="arrow">▶</span></button>
         <div class="section-content" id="personalSection">
           <div class="personal-list">
-
-            <!-- Workout Routine -->
             <div class="personal-card">
               <div class="personal-title">🏋️ Workout Routine</div>
               <ul class="personal-checklist" id="workoutList"></ul>
@@ -505,8 +495,6 @@
               </div>
               <textarea class="personal-textarea" id="workoutNotes" placeholder="Workout notes, reflections..."></textarea>
             </div>
-
-            <!-- Money Plans -->
             <div class="personal-card">
               <div class="personal-title">💸 Money Plans / Budget</div>
               <ul class="personal-checklist" id="moneyList"></ul>
@@ -516,8 +504,6 @@
               </div>
               <textarea class="personal-textarea" id="moneyNotes" placeholder="Budget notes, savings goals..."></textarea>
             </div>
-
-            <!-- Future Strategy -->
             <div class="personal-card">
               <div class="personal-title">🚀 Future Strategy</div>
               <ul class="personal-checklist" id="futureList"></ul>
@@ -527,8 +513,6 @@
               </div>
               <textarea class="personal-textarea" id="futureNotes" placeholder="Career plans, vision, quotes..."></textarea>
             </div>
-
-            <!-- BBIT Student Life -->
             <div class="personal-card">
               <div class="personal-title">🎓 Student Life (BBIT @ MKU)</div>
               <ul class="personal-checklist" id="lifeList"></ul>
@@ -538,14 +522,32 @@
               </div>
               <textarea class="personal-textarea" id="lifeNotes" placeholder="Personal notes, activities, reminders..."></textarea>
             </div>
-
           </div>
         </div>
       </div>
-
+      <div class="card">
+        <button class="section-header"><span class="icon">🤖</span>AI Assistant <span class="arrow">▶</span></button>
+        <div class="section-content" id="aiSection">
+          <div id="aiChat" style="height:170px;overflow-y:auto; background:#f3f3f3; padding:8px; border-radius:8px; font-size:15px;"></div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <input type="text" id="aiInput" style="flex:1" placeholder="Ask anything (notes, summaries, study help...)">
+            <button onclick="sendAI()">Send</button>
+          </div>
+        </div>
+      </div>
       <button class="export-btn" onclick="exportData()">Export Planner Data</button>
       <button class="clear-btn" onclick="clearAll()">Clear All Data</button>
     </main>
+  </div>
+  <!-- FULL PAGE NOTES VIEW -->
+  <div id="notesPageView" style="display:none;">
+    <header>
+      <span id="notesPageCourse" style="font-size:1.08em;"></span>
+      <button onclick="closeNotesPage()" style="float:right; font-size:17px; background:var(--danger);color:#fff;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;">← Back</button>
+    </header>
+    <div style="max-width:800px;margin:40px auto 0 auto;padding:20px;">
+      <textarea id="notesPageTextarea" style="width:100%;height:60vh;font-size:18px;padding:12px;border-radius:10px;border:2px solid var(--primary);background:var(--section-bg);color:#222;resize:vertical;box-shadow:0 2px 12px rgba(0,0,0,0.08);font-family:var(--font-main);"></textarea>
+    </div>
   </div>
   <script>
     // Profile setup
@@ -577,28 +579,76 @@
       { code: "BIT 2202", name: "Business Info System Analysis and Design" }
     ];
 
-    // Per-Course Notes
+    // Per-Course Notes (links to full-page notes view)
     function renderCourseNotes() {
       const container = document.getElementById('courseNotesList');
       container.innerHTML = '';
-      courses.forEach(course => {
+      courses.forEach((course, idx) => {
         const card = document.createElement('div');
         card.className = 'course-card';
-        card.innerHTML = `
-          <div class="course-title">${course.code} - ${course.name}</div>
-          <textarea class="course-textarea" id="notes_${course.code.replace(/\s/g, '')}" placeholder="Type notes for ${course.code}..."></textarea>
+
+        // Collapsible header for each course
+        const header = document.createElement('button');
+        header.className = 'section-header';
+        header.innerHTML = `<span class="icon">📘</span>${course.code} - ${course.name} <span class="arrow">▶</span>`;
+
+        // Content: "View Full Notes" button
+        const content = document.createElement('div');
+        content.className = 'section-content';
+        content.style.display = 'none';
+        content.innerHTML = `
+          <button onclick="openNotesPage('${course.code}')" style="margin-bottom:12px;background:var(--primary-dark);color:#fff;border:none;border-radius:8px;padding:8px 20px;cursor:pointer;font-size:16px;">View Full Notes</button>
+          <textarea class="course-textarea" id="notes_${course.code.replace(/\s/g, '')}" placeholder="Quick notes for ${course.code}..."></textarea>
         `;
-        container.appendChild(card);
-        // Load notes
-        document.getElementById(`notes_${course.code.replace(/\s/g, '')}`).value =
-          localStorage.getItem(`notes_${course.code}`) || '';
-        // Save notes on input
-        document.getElementById(`notes_${course.code.replace(/\s/g, '')}`).addEventListener('input', function() {
-          localStorage.setItem(`notes_${course.code}`, this.value);
+
+        header.addEventListener('click', () => {
+          if (content.style.display === 'block') {
+            content.style.display = 'none';
+            header.querySelector('.arrow').classList.remove('rotate');
+          } else {
+            content.style.display = 'block';
+            header.querySelector('.arrow').classList.add('rotate');
+          }
         });
+
+        card.appendChild(header);
+        card.appendChild(content);
+        container.appendChild(card);
+
+        // Load notes & save notes on input
+        setTimeout(() => {
+          const textarea = document.getElementById(`notes_${course.code.replace(/\s/g, '')}`);
+          if (textarea) {
+            textarea.value = localStorage.getItem(`notes_${course.code}`) || '';
+            textarea.addEventListener('input', function() {
+              localStorage.setItem(`notes_${course.code}`, this.value);
+            });
+          }
+        }, 0);
       });
     }
     renderCourseNotes();
+
+    // --- FULL PAGE NOTES LOGIC 
+    function openNotesPage(code) {
+      document.getElementById('dashboardView').style.display = 'none';
+      document.getElementById('notesPageView').style.display = 'block';
+      const course = courses.find(c => c.code === code);
+      document.getElementById('notesPageCourse').textContent = `${course.code} - ${course.name}`;
+      const notesKey = `notes_${code}`;
+      const textarea = document.getElementById('notesPageTextarea');
+      textarea.value = localStorage.getItem(notesKey) || '';
+      textarea.oninput = function() {
+        localStorage.setItem(notesKey, this.value);
+        // Also update quick notes mini textarea if visible
+        const quickTextarea = document.getElementById(`notes_${code.replace(/\s/g, '')}`);
+        if (quickTextarea) quickTextarea.value = this.value;
+      };
+    }
+    function closeNotesPage() {
+      document.getElementById('notesPageView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'flex';
+    }
 
     // Per-Course ToDo
     function renderCourseTodos() {
@@ -713,8 +763,8 @@
     }
     renderCalendarList();
 
-    // Collapsible sections
-    document.querySelectorAll(".section-header").forEach(header => {
+    // Collapsible sections (main cards)
+    document.querySelectorAll(".card > .section-header").forEach(header => {
       header.addEventListener("click", () => {
         const content = header.parentElement.querySelector(".section-content");
         const arrow = header.querySelector(".arrow");
@@ -892,6 +942,44 @@
     }
     renderPersonalPlanner();
 
+    // --- AI Assistant Logic ---
+    let aiHistory = [
+      {role:"system",content:"You are a helpful assistant for a BBIT student at Mount Kenya University. Help with notes, summaries, study strategies, personal planning, and any questions."}
+    ];
+    async function sendAI() {
+      const input = document.getElementById('aiInput').value.trim();
+      if (!input) return;
+      const chatDiv = document.getElementById('aiChat');
+      chatDiv.innerHTML += `<div><b>You:</b> ${input}</div>`;
+      aiHistory.push({role:"user",content:input});
+      document.getElementById('aiInput').value = '';
+      chatDiv.innerHTML += `<div><i>AI is thinking...</i></div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+      try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_OPENAI_API_KEY" // <-- Replace with your actual OpenAI API key!
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: aiHistory.slice(-12)
+          })
+        });
+        const data = await response.json();
+        if (data.choices && data.choices[0]) {
+          const answer = data.choices[0].message.content;
+          chatDiv.innerHTML += `<div><b>AI:</b> ${answer}</div>`;
+          chatDiv.scrollTop = chatDiv.scrollHeight;
+          aiHistory.push({role:"assistant",content:answer});
+        } else {
+          chatDiv.innerHTML += `<div style="color:#b00;"><i>AI error or empty response.</i></div>`;
+        }
+      } catch (e) {
+        chatDiv.innerHTML += `<div style="color:#b00;"><i>AI connection error!</i></div>`;
+      }
+    }
   </script>
 </body>
 </html>
