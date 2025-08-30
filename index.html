@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <style>
-    /* ... all your styles retained ... */
     :root {
       --primary: #0ea5e9;
       --primary-dark: #0284c7;
@@ -33,6 +32,7 @@
       color-scheme: dark;
       --bg-image: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80');
     }
+
     html, body {
       font-family: var(--font-main);
       margin: 0;
@@ -63,6 +63,7 @@
     body[data-theme="dark"] {
       color: #e0eafc;
     }
+
     header {
       background: var(--primary);
       color: #fff;
@@ -125,14 +126,15 @@
       font-size: 15px;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.2s, color 0.2s, transform 0.17s cubic-bezier(.32,.72,.57,1.38);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .mode-toggle:hover {
+    .mode-toggle:hover, .mode-toggle:active {
       background: var(--primary);
       color: #fff;
+      transform: scale(0.97);
     }
     .main-container {
       display: flex;
@@ -143,6 +145,11 @@
       padding: 0 16px;
       align-items: flex-start;
       min-height: 60vh;
+      animation: fadeInMain 1.2s cubic-bezier(.32,.72,.57,1.38) both;
+    }
+    @keyframes fadeInMain {
+      0% { opacity: 0; transform: translateY(40px);}
+      100% { opacity: 1; transform: translateY(0);}
     }
     .sidebar {
       background: var(--card-bg);
@@ -153,9 +160,16 @@
       height: fit-content;
       font-size: 16px;
       font-family: var(--font-main);
+      opacity: 0;
+      transform: translateX(-40px);
+      animation: sidebarIn 1.2s cubic-bezier(.32,.72,.57,1.38) forwards;
+      animation-delay: 0.15s;
     }
-    [data-theme="dark"] .sidebar {
-      background: var(--card-bg-dark);
+    @keyframes sidebarIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
     .sidebar h2 {
       font-size: 19px;
@@ -210,9 +224,16 @@
       transition: transform 0.16s, box-shadow 0.16s, background 0.3s;
       position: relative;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      animation: cardFadeIn 1s cubic-bezier(.32,.72,.57,1.38) forwards;
+      animation-delay: var(--card-delay, 0.1s);
     }
-    [data-theme="dark"] .card {
-      background: var(--section-bg-dark);
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
     .card:hover {
       transform: translateY(-2px) scale(1.014);
@@ -231,7 +252,7 @@
       width: 100%;
       padding: 0;
       margin-bottom: 8px;
-      transition: color 0.2s;
+      transition: color 0.2s, transform 0.17s cubic-bezier(.32,.72,.57,1.38);
       outline: none;
     }
     .section-header .icon {
@@ -248,14 +269,38 @@
     .rotate {
       transform: rotate(90deg);
     }
-    .section-content {
-      display: none;
-      animation: fadeIn 0.4s;
-      margin-top: 13px;
+    .section-header:active, .export-btn:active, .clear-btn:active, .personal-add button:active, .todo-add button:active, .calendar-add button:active, .personal-delete:active, .todo-delete:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 10px rgba(30, 41, 59, 0.18);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px);}
-      to { opacity: 1; transform: translateY(0);}
+    .section-header:focus-visible {
+      outline: 2px solid var(--accent);
+    }
+    .section-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(.32,.72,.57,1.38), opacity 0.35s cubic-bezier(.32,.72,.57,1.38);
+    }
+    .section-content.showing {
+      max-height: 1000px;
+      opacity: 1;
+      overflow: visible;
+      animation: slideDown 0.45s cubic-bezier(.32,.72,.57,1.38);
+    }
+    .section-content.hiding {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      animation: slideUp 0.32s cubic-bezier(.32,.72,.57,1.38);
+    }
+    @keyframes slideDown {
+      0% {max-height:0;opacity:0;}
+      100% {max-height:1000px;opacity:1;}
+    }
+    @keyframes slideUp {
+      0% {max-height:1000px;opacity:1;}
+      100% {max-height:0;opacity:0;}
     }
     .course-notes-list, .personal-list {
       display: grid;
@@ -351,10 +396,11 @@
       margin-left: 8px;
       cursor: pointer;
       opacity: 0.7;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, transform 0.17s cubic-bezier(.32,.72,.57,1.38);
     }
-    .personal-delete:hover {
+    .personal-delete:hover, .personal-delete:active {
       opacity: 1;
+      transform: scale(1.1);
     }
     .personal-add {
       display: flex;
@@ -378,10 +424,11 @@
       cursor: pointer;
       font-size: 15px;
       font-family: var(--font-main);
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.17s cubic-bezier(.32,.72,.57,1.38);
     }
-    .personal-add button:hover {
+    .personal-add button:hover, .personal-add button:active {
       background: var(--primary);
+      transform: scale(0.96);
     }
     @media (max-width: 900px) {
       .main-container {
@@ -417,6 +464,33 @@
       .sidebar {
         padding: 10px 7px;
       }
+    }
+    /* Full notes page fade in/out */
+    #notesPageView {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s cubic-bezier(.32,.72,.57,1.38);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: var(--background);
+      z-index: 999;
+    }
+    #notesPageView.visible {
+      opacity: 1;
+      pointer-events: auto;
+      animation: fadeInNotes 0.45s cubic-bezier(.32,.72,.57,1.38);
+    }
+    @keyframes fadeInNotes {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    /* AI chat message fade-in */
+    #aiChat div {
+      animation: fadeAiMsg 0.5s;
+    }
+    @keyframes fadeAiMsg {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
@@ -486,6 +560,7 @@
         <button class="section-header"><span class="icon">🌟</span>Personal Planner <span class="arrow">▶</span></button>
         <div class="section-content" id="personalSection">
           <div class="personal-list">
+
             <div class="personal-card">
               <div class="personal-title">🏋️ Workout Routine</div>
               <ul class="personal-checklist" id="workoutList"></ul>
@@ -522,6 +597,7 @@
               </div>
               <textarea class="personal-textarea" id="lifeNotes" placeholder="Personal notes, activities, reminders..."></textarea>
             </div>
+
           </div>
         </div>
       </div>
@@ -550,6 +626,31 @@
     </div>
   </div>
   <script>
+    // Animate cards on load
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.style.setProperty('--card-delay', `${0.1 + i * 0.13}s`);
+    });
+    // Collapsible sections with slide animation
+    document.querySelectorAll(".card > .section-header").forEach(header => {
+      header.addEventListener("click", () => {
+        const content = header.parentElement.querySelector(".section-content");
+        const arrow = header.querySelector(".arrow");
+        if (content.classList.contains('showing')) {
+          content.classList.remove('showing');
+          content.classList.add('hiding');
+          setTimeout(() => {
+            content.style.display = 'none';
+            content.classList.remove('hiding');
+          }, 320);
+          arrow.classList.remove('rotate');
+        } else {
+          content.style.display = 'block';
+          setTimeout(() => content.classList.add('showing'), 8);
+          arrow.classList.add('rotate');
+        }
+      });
+    });
+
     // Profile setup
     document.getElementById('studentName').textContent = 'Delah975';
     document.getElementById('programSemester').textContent = 'BBIT, Mount Kenya University, Semester 2';
@@ -602,11 +703,17 @@
         `;
 
         header.addEventListener('click', () => {
-          if (content.style.display === 'block') {
-            content.style.display = 'none';
+          if (content.classList.contains('showing')) {
+            content.classList.remove('showing');
+            content.classList.add('hiding');
+            setTimeout(() => {
+              content.style.display = 'none';
+              content.classList.remove('hiding');
+            }, 320);
             header.querySelector('.arrow').classList.remove('rotate');
           } else {
             content.style.display = 'block';
+            setTimeout(() => content.classList.add('showing'), 8);
             header.querySelector('.arrow').classList.add('rotate');
           }
         });
@@ -629,10 +736,12 @@
     }
     renderCourseNotes();
 
-    // --- FULL PAGE NOTES LOGIC 
+    // --- FULL PAGE NOTES LOGIC ---
     function openNotesPage(code) {
       document.getElementById('dashboardView').style.display = 'none';
-      document.getElementById('notesPageView').style.display = 'block';
+      const notesPage = document.getElementById('notesPageView');
+      notesPage.classList.add('visible');
+      notesPage.style.display = 'block';
       const course = courses.find(c => c.code === code);
       document.getElementById('notesPageCourse').textContent = `${course.code} - ${course.name}`;
       const notesKey = `notes_${code}`;
@@ -646,8 +755,12 @@
       };
     }
     function closeNotesPage() {
-      document.getElementById('notesPageView').style.display = 'none';
-      document.getElementById('dashboardView').style.display = 'flex';
+      const notesPage = document.getElementById('notesPageView');
+      notesPage.classList.remove('visible');
+      setTimeout(() => {
+        notesPage.style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'flex';
+      }, 450);
     }
 
     // Per-Course ToDo
@@ -762,21 +875,6 @@
       renderCalendarList();
     }
     renderCalendarList();
-
-    // Collapsible sections (main cards)
-    document.querySelectorAll(".card > .section-header").forEach(header => {
-      header.addEventListener("click", () => {
-        const content = header.parentElement.querySelector(".section-content");
-        const arrow = header.querySelector(".arrow");
-        if (content.style.display === "block") {
-          content.style.display = "none";
-          arrow.classList.remove("rotate");
-        } else {
-          content.style.display = "block";
-          arrow.classList.add("rotate");
-        }
-      });
-    });
 
     // Search/filter
     function searchContent() {
@@ -960,7 +1058,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_OPENAI_API_KEY" // <-- Replace with your actual OpenAI API key!
+            "Authorization": "Bearer YOUR_OPENAI_API_KEY"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
