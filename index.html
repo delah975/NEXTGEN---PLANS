@@ -23,25 +23,48 @@
       --success: #22c55e;
       --font-main: 'Roboto', Arial, sans-serif;
       --font-head: 'Montserrat', Arial, sans-serif;
+      --bg-image: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80'); /* Free Unsplash image: students on campus */
     }
     [data-theme="dark"] {
       --background: #0f172a;
       --section-bg: #1e293b;
       --card-bg: #334155;
       color-scheme: dark;
+      --bg-image: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80'); /* Free Unsplash: night study */
     }
 
     html, body {
       font-family: var(--font-main);
       margin: 0;
+      min-height: 100vh;
       background: var(--background);
       color: #222;
-      min-height: 100vh;
       transition: background 0.3s, color 0.3s;
+      /* Background image styling */
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(248,250,252,0.83);
+      z-index: -1;
+      pointer-events: none;
+      backdrop-filter: blur(2px);
+      transition: background 0.3s;
+    }
+    body[data-theme="dark"]::before {
+      background: rgba(15,23,42,.7);
+      backdrop-filter: blur(3px);
     }
     body[data-theme="dark"] {
       color: #e0eafc;
     }
+
     header {
       background: var(--primary);
       color: #fff;
@@ -236,13 +259,13 @@
       from { opacity: 0; transform: translateY(-10px);}
       to { opacity: 1; transform: translateY(0);}
     }
-    .course-notes-list {
+    .course-notes-list, .personal-list {
       display: grid;
       gap: 18px;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       margin-top: 10px;
     }
-    .course-card {
+    .course-card, .personal-card {
       background: var(--card-bg);
       border-radius: 13px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -251,11 +274,11 @@
       position: relative;
       z-index: 2;
     }
-    [data-theme="dark"] .course-card {
+    [data-theme="dark"] .course-card, [data-theme="dark"] .personal-card {
       background: var(--card-bg-dark);
       color: #e0eafc;
     }
-    .course-title {
+    .course-title, .personal-title {
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 7px;
@@ -263,10 +286,10 @@
       font-family: var(--font-head);
       letter-spacing: .5px;
     }
-    [data-theme="dark"] .course-title {
+    [data-theme="dark"] .course-title, [data-theme="dark"] .personal-title {
       color: var(--accent);
     }
-    .course-textarea {
+    .course-textarea, .personal-textarea {
       width: 100%;
       height: 70px;
       margin-top: 7px;
@@ -282,24 +305,30 @@
       font-family: var(--font-main);
       transition: background 0.2s;
     }
-    [data-theme="dark"] .course-textarea {
+    [data-theme="dark"] .course-textarea, [data-theme="dark"] .personal-textarea {
       background: var(--section-bg-dark);
       color: #e0eafc;
     }
-    .todo-section {
-      margin-top: 12px;
-      font-size: 14px;
+
+    /* Personal Planner: list stylings */
+    .personal-list {
+      gap: 18px;
+      grid-template-columns: 1fr;
+      margin-top: 10px;
     }
-    .todo-label {
+    .personal-card {
+      margin-bottom: 15px;
+    }
+    .personal-label {
       font-weight: 500;
       color: var(--primary-dark);
       margin-bottom: 8px;
       display: block;
     }
-    [data-theme="dark"] .todo-label {
+    [data-theme="dark"] .personal-label {
       color: var(--accent);
     }
-    .todo-list {
+    .personal-checklist {
       padding-left: 0;
       margin: 0;
       list-style: none;
@@ -307,18 +336,18 @@
       overflow-y: auto;
       margin-bottom: 8px;
     }
-    .todo-list li {
+    .personal-checklist li {
       display: flex;
       align-items: center;
       margin-bottom: 7px;
       gap: 6px;
     }
-    .todo-list input[type="checkbox"] {
+    .personal-checklist input[type="checkbox"] {
       accent-color: var(--success);
       margin-right: 5px;
       margin-top: 2px;
     }
-    .todo-list .todo-delete {
+    .personal-delete {
       background: none;
       border: none;
       color: var(--danger);
@@ -328,15 +357,15 @@
       opacity: 0.7;
       transition: opacity 0.2s;
     }
-    .todo-list .todo-delete:hover {
+    .personal-delete:hover {
       opacity: 1;
     }
-    .todo-add {
+    .personal-add {
       display: flex;
       gap: 7px;
       margin-top: 5px;
     }
-    .todo-add input {
+    .personal-add input {
       flex: 1;
       border: 1px solid #ddd;
       border-radius: 6px;
@@ -344,7 +373,7 @@
       font-size: 15px;
       outline: none;
     }
-    .todo-add button {
+    .personal-add button {
       background: var(--primary-dark);
       color: #fff;
       border: none;
@@ -355,150 +384,10 @@
       font-family: var(--font-main);
       transition: background 0.2s;
     }
-    .todo-add button:hover {
+    .personal-add button:hover {
       background: var(--primary);
     }
-    .calendar-section {
-      margin-top: 10px;
-    }
-    .calendar-list {
-      padding-left: 0;
-      margin: 0;
-      list-style: none;
-    }
-    .calendar-list li {
-      background: var(--card-bg);
-      border-radius: 8px;
-      margin-bottom: 7px;
-      padding: 7px 12px;
-      font-size: 15px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #222;
-      font-family: var(--font-main);
-    }
-    [data-theme="dark"] .calendar-list li {
-      background: var(--card-bg-dark);
-      color: #e0eafc;
-    }
-    .calendar-delete {
-      background: none;
-      border: none;
-      color: var(--danger);
-      font-size: 16px;
-      cursor: pointer;
-      opacity: 0.7;
-      margin-left: 12px;
-      transition: opacity 0.2s;
-    }
-    .calendar-delete:hover {
-      opacity: 1;
-    }
-    .calendar-add {
-      display: flex;
-      gap: 7px;
-      margin-top: 6px;
-    }
-    .calendar-add input[type="text"] {
-      flex: 2;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 5px 8px;
-      font-size: 15px;
-      outline: none;
-    }
-    .calendar-add input[type="date"] {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 5px 8px;
-      font-size: 15px;
-      outline: none;
-    }
-    .calendar-add button {
-      background: var(--primary-dark);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 13px;
-      cursor: pointer;
-      font-size: 15px;
-      font-family: var(--font-main);
-      transition: background 0.2s;
-    }
-    .calendar-add button:hover {
-      background: var(--primary);
-    }
-    .search-bar {
-      width: 100%;
-      margin-bottom: 18px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .search-bar input {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 8px 13px;
-      font-size: 15px;
-      outline: none;
-      font-family: var(--font-main);
-    }
-    .search-bar button {
-      background: var(--primary-dark);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 15px;
-      cursor: pointer;
-      font-size: 15px;
-      font-family: var(--font-main);
-      transition: background 0.2s;
-    }
-    .search-bar button:hover {
-      background: var(--primary);
-    }
-    .clear-btn {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 16px 28px;
-      font-size: 18px;
-      font-family: var(--font-head);
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 22px;
-      transition: background 0.3s, transform 0.2s;
-      display: block;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.11);
-      align-self: flex-end;
-    }
-    .clear-btn:hover {
-      background: var(--danger-dark);
-      transform: scale(1.04);
-    }
-    .export-btn {
-      background: var(--success);
-      color: white;
-      border: none;
-      padding: 14px 22px;
-      font-size: 16px;
-      font-family: var(--font-head);
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 9px;
-      margin-right: 11px;
-      transition: background 0.3s, transform 0.2s;
-      display: inline-block;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.09);
-    }
-    .export-btn:hover {
-      background: #16a34a;
-      transform: scale(1.04);
-    }
+
     /* Responsive */
     @media (max-width: 900px) {
       .main-container {
@@ -522,7 +411,7 @@
         margin: 15px auto;
         padding: 0 3px;
       }
-      .card {
+      .card, .personal-card {
         padding: 10px 4px;
       }
       .section-header {
@@ -545,8 +434,8 @@
     <div class="profile">
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" id="avatar">
       <div class="profile-info">
-        <span class="name" id="studentName">Student Name</span>
-        <span id="programSemester">BSc in IT, Semester 2</span>
+        <span class="name" id="studentName">Delah975</span>
+        <span id="programSemester">BBIT, Mount Kenya University, Semester 2</span>
       </div>
     </div>
     <button class="mode-toggle" id="toggleTheme">
@@ -579,17 +468,13 @@
         </div>
         <button class="section-header"><span class="icon">📝</span>Per-Course Notes <span class="arrow">▶</span></button>
         <div class="section-content" id="notesSection">
-          <div class="course-notes-list" id="courseNotesList">
-            <!-- Per-course notes cards will be injected here -->
-          </div>
+          <div class="course-notes-list" id="courseNotesList"></div>
         </div>
       </div>
       <div class="card">
         <button class="section-header"><span class="icon">✅</span>Course To-Do Lists <span class="arrow">▶</span></button>
         <div class="section-content" id="todoSection">
-          <div class="course-notes-list" id="courseTodoList">
-            <!-- Per-course todo cards will be injected here -->
-          </div>
+          <div class="course-notes-list" id="courseTodoList"></div>
         </div>
       </div>
       <div class="card">
@@ -603,14 +488,69 @@
           </div>
         </div>
       </div>
+
+      <!-- NEW: Personal Planner Card -->
+      <div class="card">
+        <button class="section-header"><span class="icon">🌟</span>Personal Planner <span class="arrow">▶</span></button>
+        <div class="section-content" id="personalSection">
+          <div class="personal-list">
+
+            <!-- Workout Routine -->
+            <div class="personal-card">
+              <div class="personal-title">🏋️ Workout Routine</div>
+              <ul class="personal-checklist" id="workoutList"></ul>
+              <div class="personal-add">
+                <input type="text" id="workoutInput" placeholder="Add workout (e.g., Running, Gym)">
+                <button onclick="addPersonalItem('workout')">Add</button>
+              </div>
+              <textarea class="personal-textarea" id="workoutNotes" placeholder="Workout notes, reflections..."></textarea>
+            </div>
+
+            <!-- Money Plans -->
+            <div class="personal-card">
+              <div class="personal-title">💸 Money Plans / Budget</div>
+              <ul class="personal-checklist" id="moneyList"></ul>
+              <div class="personal-add">
+                <input type="text" id="moneyInput" placeholder="Add expense/income (e.g., Food, Tuition)">
+                <button onclick="addPersonalItem('money')">Add</button>
+              </div>
+              <textarea class="personal-textarea" id="moneyNotes" placeholder="Budget notes, savings goals..."></textarea>
+            </div>
+
+            <!-- Future Strategy -->
+            <div class="personal-card">
+              <div class="personal-title">🚀 Future Strategy</div>
+              <ul class="personal-checklist" id="futureList"></ul>
+              <div class="personal-add">
+                <input type="text" id="futureInput" placeholder="Add goal, milestone, skill...">
+                <button onclick="addPersonalItem('future')">Add</button>
+              </div>
+              <textarea class="personal-textarea" id="futureNotes" placeholder="Career plans, vision, quotes..."></textarea>
+            </div>
+
+            <!-- BBIT Student Life -->
+            <div class="personal-card">
+              <div class="personal-title">🎓 Student Life (BBIT @ MKU)</div>
+              <ul class="personal-checklist" id="lifeList"></ul>
+              <div class="personal-add">
+                <input type="text" id="lifeInput" placeholder="Club, contact, timetable, health, assignment...">
+                <button onclick="addPersonalItem('life')">Add</button>
+              </div>
+              <textarea class="personal-textarea" id="lifeNotes" placeholder="Personal notes, activities, reminders..."></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <button class="export-btn" onclick="exportData()">Export Planner Data</button>
       <button class="clear-btn" onclick="clearAll()">Clear All Data</button>
     </main>
   </div>
   <script>
     // Profile setup
-    document.getElementById('studentName').textContent = 'Delah975'; // Change as needed
-    document.getElementById('programSemester').textContent = 'BSc in IT, Semester 2';
+    document.getElementById('studentName').textContent = 'Delah975';
+    document.getElementById('programSemester').textContent = 'BBIT, Mount Kenya University, Semester 2';
 
     // Theme Toggle
     const themeBtn = document.getElementById('toggleTheme');
@@ -625,7 +565,6 @@
       const current = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       setTheme(current);
     };
-    // Load theme on start
     setTheme(localStorage.getItem('theme') || 'light');
 
     // Course Units
@@ -821,6 +760,15 @@
           item.style.display = term ? 'none' : '';
         }
       });
+      // Filter personal planner
+      ['workout', 'money', 'future', 'life'].forEach(section => {
+        const listItems = document.querySelectorAll(`#${section}List li`);
+        let hasMatch = false;
+        listItems.forEach(item => {
+          if (item.textContent.toLowerCase().includes(term)) hasMatch = true;
+        });
+        document.getElementById(`${section}List`).parentElement.style.display = hasMatch || !term ? '' : 'none';
+      });
     }
 
     // Export/Import
@@ -828,7 +776,17 @@
       const data = {
         notes: {},
         todos: {},
-        calendar: getCalendarEvents()
+        calendar: getCalendarEvents(),
+        personal: {
+          workout: getPersonalItems('workout'),
+          workoutNotes: localStorage.getItem('workoutNotes') || '',
+          money: getPersonalItems('money'),
+          moneyNotes: localStorage.getItem('moneyNotes') || '',
+          future: getPersonalItems('future'),
+          futureNotes: localStorage.getItem('futureNotes') || '',
+          life: getPersonalItems('life'),
+          lifeNotes: localStorage.getItem('lifeNotes') || ''
+        }
       };
       courses.forEach(course => {
         data.notes[course.code] = localStorage.getItem(`notes_${course.code}`) || '';
@@ -848,15 +806,20 @@
     // Clear All Button
     function clearAll() {
       if (confirm("Are you sure you want to clear all planner data? This cannot be undone.")) {
-        // Remove all notes, todos, calendar
+        // Remove all notes, todos, calendar, personal planner
         courses.forEach(course => {
           localStorage.removeItem(`notes_${course.code}`);
           localStorage.removeItem(`todo_${course.code}`);
         });
         localStorage.removeItem('calendar_events');
+        ['workout', 'money', 'future', 'life'].forEach(type => {
+          localStorage.removeItem(`${type}Items`);
+          localStorage.removeItem(`${type}Notes`);
+        });
         renderCourseNotes();
         renderCourseTodos();
         renderCalendarList();
+        renderPersonalPlanner();
         updateProgress();
       }
     }
@@ -873,6 +836,61 @@
 
     // Update progress bar on todo changes
     window.addEventListener('storage', updateProgress);
+
+    // --- PERSONAL PLANNER LOGIC ---
+    function getPersonalItems(type) {
+      return JSON.parse(localStorage.getItem(`${type}Items`) || '[]');
+    }
+    function renderPersonalPlanner() {
+      // Lists
+      ['workout', 'money', 'future', 'life'].forEach(type => {
+        const list = document.getElementById(`${type}List`);
+        if (!list) return;
+        list.innerHTML = '';
+        getPersonalItems(type).forEach((item, idx) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <input type="checkbox" ${item.done ? 'checked' : ''} onclick="togglePersonalItem('${type}',${idx})">
+            <span style="${item.done ? 'text-decoration:line-through; color:gray;' : ''}">${item.text}</span>
+            <button class="personal-delete" onclick="deletePersonalItem('${type}',${idx})" title="Delete">✖</button>
+          `;
+          list.appendChild(li);
+        });
+      });
+      // Notes
+      ['workout', 'money', 'future', 'life'].forEach(type => {
+        const textarea = document.getElementById(`${type}Notes`);
+        if (textarea) {
+          textarea.value = localStorage.getItem(`${type}Notes`) || '';
+          textarea.oninput = function() {
+            localStorage.setItem(`${type}Notes`, this.value);
+          };
+        }
+      });
+    }
+    function addPersonalItem(type) {
+      const input = document.getElementById(`${type}Input`);
+      const value = input.value.trim();
+      if (!value) return;
+      const items = getPersonalItems(type);
+      items.push({ text: value, done: false });
+      localStorage.setItem(`${type}Items`, JSON.stringify(items));
+      input.value = '';
+      renderPersonalPlanner();
+    }
+    function togglePersonalItem(type, idx) {
+      const items = getPersonalItems(type);
+      items[idx].done = !items[idx].done;
+      localStorage.setItem(`${type}Items`, JSON.stringify(items));
+      renderPersonalPlanner();
+    }
+    function deletePersonalItem(type, idx) {
+      const items = getPersonalItems(type);
+      items.splice(idx, 1);
+      localStorage.setItem(`${type}Items`, JSON.stringify(items));
+      renderPersonalPlanner();
+    }
+    renderPersonalPlanner();
 
   </script>
 </body>
